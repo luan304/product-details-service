@@ -4,9 +4,13 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-products = {
-    "1": {"id": "1", "name": "Laptop Pro", "description": "High performance laptop", "price": 999.99, "category": "Electronics", "stock": 50},
-    "2": {"id": "2", "name": "Wireless Mouse", "description": "Ergonomic wireless mouse", "price": 29.99, "category": "Accessories", "stock": 200}
+products = ["Laptop Pro", "Wireless Mouse", "Keyboard", "Monitor"]
+
+dealers = {
+    "Laptop Pro": ["TechStore A", "Gadget Hub", "ElectroMart"],
+    "Wireless Mouse": ["Accessory World", "TechStore A"],
+    "Keyboard": ["Gadget Hub", "ElectroMart"],
+    "Monitor": ["TechStore A", "Accessory World", "Gadget Hub"]
 }
 
 @app.route('/health', methods=['GET'])
@@ -15,14 +19,12 @@ def health():
 
 @app.route('/products', methods=['GET'])
 def get_products():
-    return jsonify(list(products.values()))
+    return jsonify(products)
 
-@app.route('/products/<product_id>', methods=['GET'])
-def get_product(product_id):
-    product = products.get(product_id)
-    if product:
-        return jsonify(product)
-    return jsonify({"error": "Product not found"}), 404
+@app.route('/getdealers/<product_name>', methods=['GET'])
+def get_dealers(product_name):
+    dealer_list = dealers.get(product_name, [])
+    return jsonify({"dealers": dealer_list})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
